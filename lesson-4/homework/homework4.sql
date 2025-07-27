@@ -107,18 +107,67 @@ ________________________________________
 
   
 18. Use IN operator to filter for employees who work in either 'HR', 'IT', or 'Finance'.
-19. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
+  select * from Employees
+  where DepartmentName ='HR' OR DepartmentName ='Finance' OR DepartmentName ='IT'
 
-________________________________________
+19. Use ORDER BY to display a list of customers ordered by City in ascending and PostalCode in descending order.Use customers table
+  select *
+  from Customers
+  Order by City asc, PostalCode desc
+
+  ________________________________________
 
 ## 🔴 Hard-Level Tasks 
 20. Write a query that selects the top 5 products with the highest sales, using TOP(5) and ordered by SalesAmount DESC.
+  select top 5 Products.ProductName, Sales.SaleAmount
+  from Sales
+  Left join Products
+      on  Products.ProductID = Sales.ProductID
+  order by SaleAmount desc 
+
+
+  
 21. Combine FirstName and LastName into one column named FullName in the Employees table. (only in select statement)
+  select concat(FirstName, ' ', LastName) as FullName, *
+  from Employees
+  
 22. Write a query to select the distinct Category, ProductName, and Price for products that are priced above $50, using DISTINCT on three columns.
+  select distinct Category, ProductName, Price 
+  from Products
+  Where price > 50
+    
+  
 23. Write a query that selects products whose Price is less than 10% of the average price in the Products table. (Do some research on how to find average price of all products)
+  select ProductName, Price
+  from Products
+  where Price < (select AVG(Price) from Products) * 0.10
+  
 24. Use WHERE clause to filter for employees whose Age is less than 30 and who work in either the 'HR' or 'IT' department.
+  select *
+  from Employees
+  where Age < 30 and (DepartmentName='HR' or DepartmentName='IT')
+  
+  
 25. Use LIKE with wildcard to select all customers whose Email contains the domain '@gmail.com'.
+    select * 
+    from Customers
+    where Email like '%gmail.com'
+  
 26. Write a query that uses the ALL operator to find employees whose salary is greater than all employees in the 'Sales' department.
+  select *
+  from Employees
+  where Salary > ALL (select Salary from Employees where DepartmentName = 'Sales')
+  
 27. Write a query that filters the Orders table for orders placed in the last 180 days using BETWEEN and LATEST_DATE in the table. (Search how to get the current date and latest date)
+--version1
+  
+  select *
+  from Orders
+  where OrderDate between DATEADD(day, -180, GETDATE()) and GETDATE();
+
+--version2
+  select *
+  from Orders
+  where OrderDate between '2025-05-19' and '2025-11-15';
 
 
