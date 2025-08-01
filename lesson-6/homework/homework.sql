@@ -1,13 +1,6 @@
 
 # Lesson-6: Practice
 
-> **Notes before doing the tasks:**
-> - Tasks should be solved using **SQL Server**.
-> - Case insensitivity applies.
-> - Alias names do not affect the score.
-> - Scoring is based on the **correct output**.
-> - One correct solution is sufficient.
-
 ## Puzzle 1: Finding Distinct Values
 Question: Explain at least two ways to find distinct values based on two columns.
 
@@ -32,6 +25,9 @@ Question: Explain at least two ways to find distinct values based on two columns
 | m    | n    |
 ```
 
+    
+
+    
 ```sql
 CREATE TABLE InputTbl (
     col1 VARCHAR(10),
@@ -46,7 +42,17 @@ CREATE TABLE InputTbl (
 ('m', 'n'),
 ('n', 'm');
 ```
-
+SELECT DISTINCT
+    CASE
+        WHEN col1 <= col2 THEN col1
+        ELSE col2
+    END AS col1,
+    CASE
+        WHEN col1 <= col2 THEN col2
+        ELSE col1
+    END AS col2
+FROM
+    InputTbl;
 ---
 
 ## Puzzle 2: Removing Rows with All Zeroes
@@ -70,6 +76,15 @@ VALUES
     (0,0,0,0),
     (1,1,1,0);
 ```
+SELECT
+    A,
+    B,
+    C,
+    D
+FROM
+    TestMultipleZero
+WHERE
+    A <> 0 OR B <> 0 OR C <> 0 OR D <> 0;
 ---
 
 ## Puzzle 3: Find those with odd ids
@@ -84,16 +99,45 @@ insert into section1 values (1, 'Been'),
        (7, 'Fred'),
        (8, 'Andro')
 ```
+SELECT
+    id,
+    name
+FROM
+    section1
+WHERE
+    id % 2 = 1;
+    
 ## Puzzle 4: Person with the smallest id (use the table in puzzle 3)
-
+SELECT TOP 1
+    id,
+    name
+FROM
+    section1
+ORDER BY
+    id ASC;
+    
 ---
 
 ## Puzzle 5: Person with the highest id (use the table in puzzle 3)
 
+
+SELECT TOP 1
+    id,
+    name
+FROM
+    section1
+ORDER BY
+    id DESC;
 ---
 
 ## Puzzle 6: People whose name starts with b (use the table in puzzle 3)
-
+SELECT
+    id,
+    name
+FROM
+    section1
+WHERE
+    name LIKE 'B%';
 ---
 
 ## Puzle 7: Write a query to return only the rows where the code contains the literal underscore _ (not as a wildcard).
@@ -112,3 +156,9 @@ INSERT INTO ProductCodes (Code) VALUES
 ('X#DEF'),
 ('X-999');
 ```
+SELECT
+    Code
+FROM
+    ProductCodes
+WHERE
+    Code LIKE '%[_]%' ESCAPE '\';
