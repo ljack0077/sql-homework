@@ -1,21 +1,4 @@
 # Lesson 5: Aliases, Unions, and Conditional columns
-All the Tasks should be solved using/in MSSQL-SERVER.
-
-✅ Aliases
-✅ UNION, UNION ALL, INTERSECT, EXCEPT
-✅ Creating Conditional Columns with CASE and IIF
-✅ Using IF, WHILE
-
-
-> **Notes before doing the tasks:**
-> - Tasks should be solved using **SQL Server**.
-> - Case insensitivity applies.
-> - Alias names do not affect the score.
-> - Scoring is based on the **correct output**.
-> - One correct solution is sufficient.
-
-________________________________________
-
 ##  Easy-Level Tasks 
 1. Write a query that uses an alias to rename the ProductName column as Name in the Products table.
 2. Write a query that uses an alias to rename the Customers table as Client for easier reference.
