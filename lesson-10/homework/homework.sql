@@ -98,7 +98,6 @@ SELECT
       ON E.DepartmentID = D.DepartmentID
     WHERE
       D.DepartmentName = 'Human Resources';
------
 
 --## 🟠 **Medium-Level Tasks (9)**
 
