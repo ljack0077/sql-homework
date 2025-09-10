@@ -44,7 +44,7 @@ JOIN (
     FROM Sales
     GROUP BY ProductID
 ) AS ProductMaxSale ON p.ProductID = ProductMaxSale.ProductID;
-```
+
 5. WITH DoublingCTE AS (
     SELECT 1 AS DoubledValue
     UNION ALL
