@@ -67,8 +67,116 @@ SELECT Id FROM Temps WHERE Temperature > Prev_Temp;
     FROM Activity
     GROUP BY player_id;
 
-4. 
---Hard tasks
+4. WITH FruitItems AS (
+    SELECT
+        value,
+        ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS ItemNumber
+    FROM fruits
+    CROSS APPLY STRING_SPLIT(fruit_list, ',')
+)
+SELECT value AS ThirdFruit
+FROM FruitItems
+WHERE ItemNumber = 3;
 
+5. DECLARE @str VARCHAR(100) = 'sdgfhsdgfhs@121313131';
+
+WITH Chars AS (
+    SELECT
+        CAST(SUBSTRING(@str, 1, 1) AS VARCHAR(100)) AS C,
+        1 AS idx
+    UNION ALL
+    SELECT
+        CAST(SUBSTRING(@str, idx + 1, 1) AS VARCHAR(100)),
+        idx + 1
+    FROM Chars
+    WHERE idx < LEN(@str)
+)
+SELECT C AS CharacterRow FROM Chars;
+
+6. SELECT
+    p1.id,
+    CASE WHEN p1.code = 0 THEN p2.code ELSE p1.code END AS code
+FROM p1
+JOIN p2 ON p1.id = p2.id;
+
+7. SELECT
+    EMPLOYEE_ID,
+    FIRST_NAME,
+    LAST_NAME,
+    HIRE_DATE,
+    CASE
+        WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) < 1 THEN 'New Hire'
+        WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) <= 5 THEN 'Junior'
+        WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) <= 10 THEN 'Mid-Level'
+        WHEN DATEDIFF(YEAR, HIRE_DATE, GETDATE()) <= 20 THEN 'Senior'
+        ELSE 'Veteran'
+    END AS EmploymentStage
+FROM Employees;
+
+8. SELECT
+    VALS,
+    CASE
+        WHEN VALS LIKE '[0-9]%'
+        THEN LEFT(VALS, PATINDEX('%[^0-9]%', VALS + 'a') - 1)
+    END AS StartingInteger
+FROM GetIntegers;
+
+--Hard tasks
+1. WITH Parts AS (
+    SELECT
+        Id,
+        Vals,
+        CHARINDEX(',', Vals) AS FirstComma,
+        CHARINDEX(',', Vals, CHARINDEX(',', Vals) + 1) AS SecondComma
+    FROM MultipleVals
+)
+SELECT
+    Id,
+    CONCAT(
+        SUBSTRING(Vals, FirstComma + 1, SecondComma - FirstComma - 1),
+        ',',
+        LEFT(Vals, FirstComma - 1), 
+        SUBSTRING(Vals, SecondComma, LEN(Vals)) 
+    ) AS SwappedVals
+FROM Parts;
+
+2. WITH RankedLogins AS (
+    SELECT
+        player_id,
+        device_id,
+        ROW_NUMBER() OVER(PARTITION BY player_id ORDER BY event_date ASC) as rn
+    FROM Activity
+)
+SELECT player_id, device_id
+FROM RankedLogins
+WHERE rn = 1;
+
+3. WITH DailyAgg AS (
+    SELECT
+        Area,
+        [Date],
+        FinancialWeek,
+        FinancialYear,
+        DayName,
+        SUM(ISNULL(SalesLocal, 0) + ISNULL(SalesRemote, 0)) AS TotalDailySales
+    FROM WeekPercentagePuzzle
+    GROUP BY Area, [Date], FinancialWeek, FinancialYear, DayName
+),
+WeeklyAgg AS (
+    SELECT
+        *,
+        SUM(TotalDailySales) OVER (PARTITION BY Area, FinancialWeek, FinancialYear) AS TotalWeeklySales
+    FROM DailyAgg
+)
+SELECT
+    Area,
+    [Date],
+    DayName,
+    FinancialWeek,
+    TotalDailySales,
+    TotalWeeklySales,
+    CAST(TotalDailySales * 100.0 / TotalWeeklySales AS DECIMAL(5, 2)) AS PercentageOfWeek
+FROM WeeklyAgg
+WHERE TotalWeeklySales > 0;
 
 
